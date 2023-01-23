@@ -15,7 +15,8 @@ class Simulation:
                  max_timestep: int):
         self.config = config
         self.agents: List[AgentMAPD] = config.agents_mapd
-        self.centralized = CentralizedAlgorithm(self.agents, config.map, config.endpoints)
+        endpoints = list(config.endpoints.values())
+        self.centralized = CentralizedAlgorithm(self.agents, config.map, endpoints)
         self.tasks: Dict[int: List[Task]] = config.tasks  # {timestep: [task]}
         self.max_timestep = max_timestep
         self.path_log: Dict[AgentMAPD: np.ndarray] = dict()

@@ -11,7 +11,7 @@ def main():
     sim.run()
 
     visualizer = Visualizer(sim, speed=1.5)
-    visualizer.plot(save=True)
+    visualizer.plot(save=False)
 
 
 if __name__ == "__main__":
