@@ -13,7 +13,7 @@ class CentralizedAlgorithm:
     def __init__(self,
                  agents: AgentMAPD,
                  map: List[List[str]],
-                 endpoints):
+                 endpoints: List[Tuple[int, int]]):
         self.agents: List[AgentMAPD] = agents
         self.cbs = ConflictBasedSearch(self.agents, map)
         self.endpoints = endpoints
@@ -81,7 +81,7 @@ class CentralizedAlgorithm:
                 inf = 1001001001
                 dist = inf
                 nearest_ep = tuple()
-                for ep in self.endpoints.values():
+                for ep in self.endpoints:
                     if hold.setdefault(ep, False):
                         continue
                     dist_ep = self.heuristic(agent.pos, ep)
@@ -132,7 +132,7 @@ if __name__ == "__main__":
 
     agents: List[AgentMAPD] = config.agents_mapd
 
-    ca = CentralizedAlgorithm(agents, config.map, config.endpoints)
+    ca = CentralizedAlgorithm(agents, config.map, list(config.endpoints.values()))
 
     task0 = Task((0, 6), (4, 3))
     task1 = Task((4, 0), (4, 6))
