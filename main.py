@@ -4,7 +4,7 @@ from visualizer import Visualizer
 
 
 def main():
-    max_timestep = 20
+    max_timestep = 30
     config_file = "./config/config_test.xlsx"
     config = ConfigMAPD(config_file)
     sim = Simulation(config, max_timestep)

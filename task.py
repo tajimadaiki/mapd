@@ -6,10 +6,13 @@ from typing import Tuple
 
 class Task:
     def __init__(self,
+                 id: int,
                  pickup_loc: Tuple[int, int],
                  delivery_loc: Tuple[int, int]):
         self.pickup_loc = pickup_loc
         self.delivery_loc = delivery_loc
+        self.start_chain_task = None
+        self.finish_chain_task = None
     
     def add_start_chain_task(self, chain_task):
         self.start_chain_task = chain_task
@@ -25,7 +28,11 @@ class Task:
 
 
 if __name__ == "__main__":
-    task = Task((2, 5), (10, 3))
-    next_task = Task((2, 5), (5, 2))
+    task = Task(0, (2, 5), (10, 3))
+    if task.start_chain_task is not None:
+        print('ctart chain task 1')
+    next_task = Task(1, (2, 5), (5, 2))
     task.add_start_chain_task(next_task)
+    if task.start_chain_task is not None:
+        print('ctart chain task 2')
     print(task)

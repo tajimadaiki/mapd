@@ -48,6 +48,12 @@ class Simulation:
             # when agent finish assigned task
             if agent.delivering and agent.task.delivery_loc == agent.pos:
                 print(f'finish {agent.task} by {agent}!')
+                # add chain task
+                if agent.task.finish_chain_task is not None:
+                    new_task = agent.task.finish_chain_task
+                    self.centralized.remain_tasks.append(new_task)
+                    print('add finish chain task')
+                # update
                 self.centralized.in_delivery_tasks.remove(agent.task)
                 agent.delivering = False
                 agent.next_destination = agent.pos
@@ -58,6 +64,12 @@ class Simulation:
                     and agent.task.pickup_loc == agent.pos \
                     and not hold.setdefault(agent.task.delivery_loc, False):
                 print(f'{agent} starts {agent.task}!')
+                # add chain task
+                if agent.task.start_chain_task is not None:
+                    new_task = agent.task.start_chain_task
+                    self.centralized.remain_tasks.append(new_task)
+                    print('add start chain task')
+                # update
                 agent.delivering = True
                 self.centralized.remain_tasks.remove(agent.task)
                 self.centralized.in_delivery_tasks.append(agent.task)
