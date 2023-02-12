@@ -57,8 +57,8 @@ class Visualizer:
 
     def plot(self, save=False, name='anim'):
         fig = plt.figure()
-        ax1 = fig.add_subplot(2, 1, 1, aspect=1)
-        ax2 = fig.add_subplot(2, 1, 2, aspect=0.5)
+        ax1 = fig.add_subplot(1, 2, 1, aspect=1)
+        ax2 = fig.add_subplot(1, 2, 2, aspect=0.5)
 
         def plot_one_step(f):
             # clear pre step artists
