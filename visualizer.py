@@ -14,7 +14,7 @@ class Visualizer:
     def __init__(self,
                  simulation: Simulation,
                  speed: float = 1.0,
-                 step_div=10):
+                 step_div=5):
         self.grid_size_x = simulation.config.grid_size_x
         self.grid_size_y = simulation.config.grid_size_y
         self.static_obstacles = simulation.config.static_obstacles
@@ -55,15 +55,18 @@ class Visualizer:
                         self.state_traject[agent].append('free')
             self.traject[agent] = np.stack([traj_x, traj_y], 1)
 
-    def plot(self, save=False, name='anim'):
-        fig = plt.figure()
-        ax1 = fig.add_subplot(1, 2, 1, aspect=1)
-        ax2 = fig.add_subplot(1, 2, 2, aspect=0.5)
+    def plot(self, save=False, name='anim', display_tasks=False, figure_size=(6, 4)):
+        fig = plt.figure(figsize=figure_size)
+        if display_tasks:
+            ax1 = fig.add_subplot(1, 2, 1, aspect=1)
+            ax2 = fig.add_subplot(1, 2, 2, aspect=0.5)
+        else:
+            ax1 = fig.add_subplot(1, 1, 1, aspect=1)
 
         def plot_one_step(f):
             # clear pre step artists
             ax1.cla()
-            ax2.cla()
+            if display_tasks: ax2.cla()
             # set lim
             ax1.set_xlim(-1, self.grid_size_x)
             ax1.set_ylim(-1, self.grid_size_y)
@@ -105,10 +108,10 @@ class Visualizer:
             label = ["stock\ntasks", "delivering\ntasks"]
             value = [self.task_assign_log[timestep], self.task_deliver_log[timestep]]
             y_lim_max = int(max(max(self.task_assign_log), max(self.task_deliver_log))*1.2)
-
-            ax2.set_ylabel("number of tasks")
-            ax2.set_ylim(-1, y_lim_max)
-            ax2.bar(label, value, color="blue", ec="k")
+            if display_tasks:
+                ax2.set_ylabel("number of tasks")
+                ax2.set_ylim(-1, y_lim_max)
+                ax2.bar(label, value, color="blue", ec="k")
 
         interval_time = 1000 / self.step_div / self.speed
         anim = FuncAnimation(fig, plot_one_step, frames=self.traj_steps, interval=interval_time)

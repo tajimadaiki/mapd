@@ -28,12 +28,16 @@ class Simulation:
     def run(self):
         for timestep in range(self.max_timestep):
             print(timestep)
-            print(f'remain_tasks: {len(self.centralized.remain_tasks)}, '
-                  f'in_delivery_tasks: {len(self.centralized.in_delivery_tasks)}')
+            print(f'remain_tasks: {self.centralized.remain_tasks}, '
+                  f'in_delivery_tasks: {self.centralized.in_delivery_tasks}')
             self.centralized.plan()
             self.update(timestep)
+            if len(self.centralized.remain_tasks) == 0 \
+                  and len(self.centralized.in_delivery_tasks) == 0:
+                print(f'finish all task at {timestep}')
+                break
         self.path_log = self.agent_path()
-        print(self.path_log)
+        # print(self.path_log)
 
     def update(self, timestep: int):
         # recode hold
@@ -49,12 +53,13 @@ class Simulation:
             if agent.delivering and agent.task.delivery_loc == agent.pos:
                 print(f'finish {agent.task} by {agent}!')
                 # add chain task
-                if agent.task.finish_chain_task is not None:
-                    new_task = agent.task.finish_chain_task
-                    self.centralized.remain_tasks.append(new_task)
-                    print('add finish chain task')
+                if len(agent.task.finish_chain_task) != 0:
+                    new_tasks = agent.task.finish_chain_task
+                    self.centralized.remain_tasks.extend(new_tasks)
+                    print('add finish chain tasks')
                 # update
                 self.centralized.in_delivery_tasks.remove(agent.task)
+                agent.task = None
                 agent.delivering = False
                 agent.next_destination = agent.pos
 
@@ -65,12 +70,15 @@ class Simulation:
                     and not hold.setdefault(agent.task.delivery_loc, False):
                 print(f'{agent} starts {agent.task}!')
                 # add chain task
-                if agent.task.start_chain_task is not None:
-                    new_task = agent.task.start_chain_task
-                    self.centralized.remain_tasks.append(new_task)
-                    print('add start chain task')
+                if len(agent.task.start_chain_task) != 0:
+                    new_tasks = agent.task.start_chain_task
+                    self.centralized.remain_tasks.extend(new_tasks)
+                    print('add start chain tasks')
                 # update
                 agent.delivering = True
+                ###########################################
+                print(f'agent task: {agent.task}')
+                ###########################################
                 self.centralized.remain_tasks.remove(agent.task)
                 self.centralized.in_delivery_tasks.append(agent.task)
                 agent.next_destination = agent.task.delivery_loc

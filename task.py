@@ -1,7 +1,7 @@
 import  sys
 sys.path.append( "./mapf" )
 
-from typing import Tuple
+from typing import Tuple, List
 
 
 class Task:
@@ -11,14 +11,14 @@ class Task:
                  delivery_loc: Tuple[int, int]):
         self.pickup_loc = pickup_loc
         self.delivery_loc = delivery_loc
-        self.start_chain_task = None
-        self.finish_chain_task = None
+        self.start_chain_task: List[Task] = []
+        self.finish_chain_task: List[Task] = []
     
     def add_start_chain_task(self, chain_task):
-        self.start_chain_task = chain_task
+        self.start_chain_task.append(chain_task)
     
     def add_finish_chain_task(self, chain_task):
-        self.finish_chain_task = chain_task
+        self.finish_chain_task.append(chain_task)
 
     def __str__(self):
         return str(f'task:pickup{self.pickup_loc}_delivery{self.delivery_loc}')
